@@ -1,0 +1,696 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API",
+    "version": "1.0.0",
+    "description": "API documentation for the E-Commerce project"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5555",
+      "description": "Local server"
+    }
+  ],
+  "paths": {
+    "/api/register": {
+      "post": {
+        "tags": ["auth"],
+        "summary": "User registration",
+        "description": "Register a new user with email and password.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "example": "user@example.com" },
+                  "password": { "type": "string", "example": "password123" }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User registered successfully" },
+          "400": { "description": "Bad request, missing or invalid fields" },
+          "500": { "description": "Internal server error" }
+        }
+      }
+    },
+    "/api/login": {
+      "post": {
+        "tags": ["auth"],
+        "summary": "User login",
+        "description": "Authenticate user with email and password.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "example": "user@example.com" },
+                  "password": { "type": "string", "example": "password123" }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login successful" },
+          "400": { "description": "Invalid email or password" },
+          "500": { "description": "Internal server error" }
+        }
+      }
+    },
+    "/api/current-user": {
+      "post": {
+        "tags": ["auth"],
+        "summary": "Get current user",
+        "description": "Retrieve the current logged-in user’s details.",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Current user details" },
+          "401": { "description": "No Token, Authorization required" },
+          "500": { "description": "Server error, Token Invalid" }
+        }
+      }
+    },
+    "/api/current-admin": {
+      "post": {
+        "tags": ["auth"],
+        "summary": "Get current admin user",
+        "description": "Retrieve details of the current logged-in admin user.",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Current admin user details" },
+          "403": { "description": "Access Denied: Admin only" },
+          "500": { "description": "Server error, Token Invalid" }
+        }
+      }
+    },
+    "/api/admin/order-status": {
+      "put": {
+        "tags": ["admin"],
+        "summary": "Update order status",
+        "description": "Change the status of a specific order.",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "orderId": { "type": "string", "example": "order12345" },
+                  "status": { "type": "string", "example": "Shipped" }
+                },
+                "required": ["orderId", "status"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Order status updated successfully" },
+          "401": { "description": "Unauthorized" },
+          "500": { "description": "Internal server error" }
+        }
+      }
+    },
+    "/api/admin/orders": {
+      "get": {
+        "tags": ["admin"],
+        "summary": "Get all orders",
+        "description": "Retrieve all orders for the admin.",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of all orders" },
+          "401": { "description": "Unauthorized" },
+          "500": { "description": "Internal server error" }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": ["user"],
+        "summary": "List all users",
+        "description": "Retrieve a list of all users (admin only).",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of all users" },
+          "403": { "description": "Access Denied: Admin only" },
+          "500": { "description": "Internal server error" }
+        }
+      }
+    },
+    "/api/change-status": {
+      "post": {
+        "tags": ["user"],
+        "summary": "Change user status",
+        "description": "Change the status of a user (admin only).",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string", "example": "3" },
+                  "enabled": { "type": "string", "example": "false" }
+                },
+                "required": ["id", "enabled"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "User status updated successfully" },
+          "403": { "description": "Access Denied: Admin only" },
+          "500": { "description": "Internal server error" }
+        }
+      }
+    },"/api/change-role": {
+      "post": {
+        "tags": ["user"],
+        "summary": "Change user role",
+        "description": "Change the role of a user (admin only).",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": { "type": "string", "example": "2" },
+                  "role": { "type": "string", "example": "admin" }
+                },
+                "required": ["userId", "role"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "User role updated successfully" },
+          "403": { "description": "Access Denied: Admin only" },
+          "500": { "description": "Internal server error" }
+        }
+      }
+    },"/api/user/cart": {
+  "post": {
+    "tags": ["user"],
+    "summary": "Add to user cart",
+    "description": "Add items to the current user's cart.",
+    "security": [{ "bearerAuth": [] }],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "productId": { "type": "string", "example": "5" },
+              "count": { "type": "string", "example": 2 },
+              "price": { "type": "string", "example": 9500 }
+            },
+            "required": ["productId", "count", "price"]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": { "description": "Product added to cart successfully" },
+      "401": { "description": "Unauthorized" },
+      "500": { "description": "Internal server error" }
+    }
+  },
+  "get": {
+    "tags": ["user"],
+    "summary": "Get user cart",
+    "description": "Retrieve the current user's cart contents.",
+    "security": [{ "bearerAuth": [] }],
+    "responses": {
+      "200": { "description": "User cart details" },
+      "401": { "description": "Unauthorized" },
+      "500": { "description": "Internal server error" }
+    }
+  },
+  "delete": {
+    "tags": ["user"],
+    "summary": "Empty user cart",
+    "description": "Remove all items from the current user's cart.",
+    "security": [{ "bearerAuth": [] }],
+    "responses": {
+      "200": { "description": "User cart emptied successfully" },
+      "401": { "description": "Unauthorized" },
+      "500": { "description": "Internal server error" }
+    }
+  }
+},"/api/user/address": {
+      "post": {
+        "tags": ["user"],
+        "summary": "Save user address",
+        "description": "Save the current user's address information.",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "address": { "type": "string", "example": "bankkok" }
+                },
+                "required": ["address"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "User address saved successfully" },
+          "401": { "description": "Unauthorized" },
+          "500": { "description": "Internal server error" }
+        }
+      }
+    },
+"/api/user/order": {
+  "post": {
+    "tags": ["user"],
+    "summary": "Add to user cart",
+    "description": "Add items to the current user's cart.",
+    "security": [{ "bearerAuth": [] }],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "productId": { "type": "string", "example": "product123" },
+              "quantity": { "type": "integer", "example": 1 }
+            },
+            "required": ["productId", "quantity"]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": { "description": "Product added to cart successfully" },
+      "401": { "description": "Unauthorized" },
+      "500": { "description": "Internal server error" }
+    }
+  },
+  "get": {
+    "tags": ["user"],
+    "summary": "Get user cart",
+    "description": "Retrieve the current user's cart contents.",
+    "security": [{ "bearerAuth": [] }],
+    "responses": {
+      "200": { "description": "User cart details" },
+      "401": { "description": "Unauthorized" },
+      "500": { "description": "Internal server error" }
+    }
+  }
+
+},
+    
+"/api/category": {
+  "post": {
+    "tags": ["category"],
+    "summary": "Create category",
+    "description": "Create a new category (admin only).",
+    "security": [{ "bearerAuth": [] }],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string", "example": "notebook" }
+            },
+            "required": ["name"]
+          }
+        }
+      }
+    },
+    "responses": {
+      "201": { "description": "Category created successfully" },
+      "403": { "description": "Access Denied: Admin only" },
+      "500": { "description": "Internal server error" }
+    }
+  },
+  "get": {
+    "tags": ["category"],
+    "summary": "List categories",
+    "description": "Retrieve a list of all categories.",
+    "responses": {
+      "200": {
+        "description": "List of categories",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string", "example": "category123" },
+                  "name": { "type": "string", "example": "Electronics" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": { "description": "Internal server error" }
+    }
+  }
+},
+"/api/category/{id}": {
+  "delete": {
+    "tags": ["category"],
+    "summary": "Delete category",
+    "description": "Delete a category by ID (admin only).",
+    "security": [{ "bearerAuth": [] }],
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "category123"
+        }
+      }
+    ],
+    "responses": {
+      "200": { "description": "Category deleted successfully" },
+      "403": { "description": "Access Denied: Admin only" },
+      "404": { "description": "Category not found" },
+      "500": { "description": "Internal server error" }
+    }
+  }
+},
+
+"/api/products": {
+  "post": {
+    "tags": ["product"],
+    "summary": "Create product",
+    "description": "Create a new product in the catalog.",
+    "security": [{ "bearerAuth": [] }],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string", "example": "Laptop" },
+              "description": { "type": "string", "example": "รุ่นใหม่ล่าสุด" },
+              "price": { "type": "number", "example":14500 },
+              "quantity": { "type": "number", "example": 4 },
+              "categoryId": { "type": "number", "example": 2 },
+              "images": { "type": "number", "example": [] }
+            },
+            "required": ["title", "description","price","quantity","categoryId","images"]
+          }
+        }
+      }
+    },
+    "responses": {
+      "201": { "description": "Product created successfully" },
+      "500": { "description": "Internal server error" }
+    }
+  }
+},
+"/api/products/{count}": {
+  "get": {
+    "tags": ["product"],
+    "summary": "List products",
+    "description": "Retrieve a list of products with a specified limit.",
+    "parameters": [
+      {
+        "name": "count",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "example": 10
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of products",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string", "example": "Laptop" },
+                  "description": { "type": "string", "example": "รุ่นใหม่ล่าสุด" },
+                  "price": { "type": "number", "example":14500 },
+                  "quantity": { "type": "number", "example": 4 },
+                  "categoryId": { "type": "number", "example": 2 },
+                  "images": { "type": "number", "example": [] }
+                },
+                "required": ["title", "description","price","quantity","categoryId","images"]
+              }
+            }
+          }
+        }
+      },
+      "500": { "description": "Internal server error" }
+    }
+  }
+},
+"/api/product/{id}": {
+  "delete": {
+    "tags": ["product"],
+    "summary": "Delete product",
+    "description": "Delete a product by its ID.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "productId 123"
+        }
+      }
+    ],
+    "responses": {
+      "200": { "description": "Product deleted successfully" },
+      "404": { "description": "Product not found" },
+      "500": { "description": "Internal server error" }
+    }
+  },
+  "put": {
+    "tags": ["product"],
+    "summary": "Update product",
+    "description": "Update an existing product by its ID.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string", "example": "Laptop" },
+              "description": { "type": "string", "example": "รุ่นใหม่ล่าสุด" },
+              "price": { "type": "number", "example":14500 },
+              "quantity": { "type": "number", "example": 4 },
+              "categoryId": { "type": "number", "example": 2 },
+              "images": { "type": "number", "example": [] }
+            }
+            
+          }
+        }
+      }
+    },
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "produdctId 123"
+        }
+      }
+    ],
+    "responses": {
+      "200": { "description": "Product updated successfully" },
+      "404": { "description": "Product not found" },
+      "500": { "description": "Internal server error" }
+    }
+  },
+  "get": {
+    "tags": ["product"],
+    "summary": "Get product details",
+    "description": "Retrieve details of a specific product by its ID.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "prod123"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Product details",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string", "example": "Laptop" },
+                "description": { "type": "string", "example": "รุ่นใหม่ล่าสุด" },
+                "price": { "type": "number", "example":14500 },
+                "quantity": { "type": "number", "example": 4 },
+                "categoryId": { "type": "number", "example": 2 },
+                "images": { "type": "number", "example": [] }
+              }
+             
+            }
+          }
+        }
+      },
+      "404": { "description": "Product not found" },
+      "500": { "description": "Internal server error" }
+    }
+  }
+},
+"/api/productby": {
+  "post": {
+    "tags": ["product"],
+    "summary": "Filter products",
+    "description": "Retrieve products by specified filters.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "sort": { "type": "string", "example": "price" },
+              "order": { "type": "string",  "example": "asc" },
+              "limit": { "type": "number",  "example": 8 }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": { "description": "Filtered list of products" },
+      "500": { "description": "Internal server error" }
+    }
+  }
+},
+"/api/search/filters": {
+  "post": {
+    "tags": ["product"],
+    "summary": "Search products with filters",
+    "description": "Search products by multiple filters.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+            
+              "category": { "type": "array", "example": [1,6] }
+            
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": { "description": "List of products matching search criteria" },
+      "500": { "description": "Internal server error" }
+    }
+  }
+},
+"/api/images": {
+  "post": {
+    "tags": ["product"],
+    "summary": "Upload images",
+    "description": "Upload images for a product (admin only).",
+    "security": [{ "bearerAuth": [] }],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "multipart/form-data": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "image": { "type": "string", "format": "binary" }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": { "description": "Image uploaded successfully" },
+      "500": { "description": "Internal server error" }
+    }
+  }
+},
+"/api/removeimages": {
+  "post": {
+    "tags": ["product"],
+    "summary": "Remove images",
+    "description": "Remove images for a product (admin only).",
+    "security": [{ "bearerAuth": [] }],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "imageId": { "type": "string", "example": "img123" }
+            },
+            "required": ["imageId"]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": { "description": "Image removed successfully" },
+      "500": { "description": "Internal server error" }
+    }
+  }
+}
+
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "tags": [
+    { "name": "auth", "description": "Authentication and authorization routes" },
+    { "name": "admin", "description": "Admin-specific routes" },
+    { "name": "user", "description": "User management routes" },
+    { "name": "category", "description": "Category management routes" },
+    { "name": "product", "description": "Product management routes" }
+  ]
+}
