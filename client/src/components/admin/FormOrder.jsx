@@ -110,10 +110,10 @@ const FormOrder = () => {
 
   return (
     <div className="w-full p-4">
-      <Typography variant="h5" className="font-bold mb-4 text-center">
+      <Typography variant="h5" className="font-bold mb-6  text-center">
         รายการคำสั่งซื้อ
       </Typography>
-      <TableContainer component={Paper} className="shadow-lg rounded-lg">
+      <TableContainer component={Paper} className="p-4 shadow-lg rounded-lg">
         <Table aria-label="orders table">
           <TableHead>
             <TableRow className="bg-gray-300">

@@ -52,11 +52,11 @@ const router = createBrowserRouter([
     element: <ProtectRouteAdmin element={<LayoutAdmin />} />,
     children: [
       { index: true, element: <Dashboard /> },
-      { path: "category", element: <Category /> },
-      { path: "product", element: <Product /> },
-      { path: "product/:id", element: <EditProduct /> },
-      { path: "settings", element: <Manage /> },
-      { path: "order", element: <ManageOrder /> },
+      { path: "category", element: <Category /> },   //หมวดหมู่สินค้า
+      { path: "product", element: <Product /> },   //สินค้า
+      { path: "product/:id", element: <EditProduct /> },   //แก้ไขสินค้า
+      { path: "settings", element: <Manage /> },   //ตั้งค่า
+      { path: "order", element: <ManageOrder /> },   //จัดการคำสั่งซื้อ
     ],
   },
   {
@@ -66,8 +66,8 @@ const router = createBrowserRouter([
     element: <ProtectRouteUser element={<LayoutUser />} />,
     children: [
       { index: true, element: <HomeUser /> },
-      { path: "payment", element: <Payment /> },
-      { path: "history", element: <History /> },
+      { path: "payment", element: <Payment /> },   //การชำระเงิน
+      { path: "history", element: <History /> },   //ประวัติการซื้อ
     ],
   },
 ]);

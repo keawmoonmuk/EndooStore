@@ -30,8 +30,9 @@ const MainNavBar = () => {
       <div className="container mx-auto px-6 flex justify-between items-center h-20">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2">
-          <ShoppingBag className="h-8 w-8 text-white" />
-          <span className="text-3xl font-bold text-white">Endoo Shop</span>
+          {/* <ShoppingBag className="h-8 w-8 text-white" />  */}
+          <img src="src\assets\logo.png" alt="Endoo Shop Logo" className="h-20 w-auto" />
+           <span className="text-3xl font-bold text-white">Endoo Shop</span>  
         </Link>
 
         {/* Hamburger Icon for Mobile */}
