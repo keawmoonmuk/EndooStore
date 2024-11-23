@@ -23,6 +23,7 @@ import ManageOrder from "../pages/admin/ManageOrder";
 import Blog from "../components/blogs/blog";
 import ContactUs from "../components/contact/ContactUs";
 import AboutUs from "../components/about/AboutUs";
+import ForgotPassword from "../pages/auth/ForgotPassword";
 
 //สร้างตัวแปรสำหรับใช้งาน route
 const router = createBrowserRouter([
@@ -43,6 +44,7 @@ const router = createBrowserRouter([
       { path: "checkout", element: <Checkout /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
+      { path: "forgot-password", element: <ForgotPassword /> },
     ],
   },
   {
